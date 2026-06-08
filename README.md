@@ -25,29 +25,12 @@ A modern, dark-themed Windows calculator built with **WPF** and **.NET 10** (C# 
 
 ---
 
-## 🚀 How to Build and Run
+## 🚀 How to Run It
 
 Make sure you have the **.NET 10 SDK** installed.
 
-### Run in Development Mode
-```bash
-dotnet run
-```
+Download **WpfCalculator.exe** and run it
 
-### Build a Standalone Executable (`.exe`)
-
-#### Option 1: Lightweight (Uses system .NET 10, ~180 KB)
-```bash
-dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --self-contained false
-```
-*Output: `bin\Release\net10.0-windows\win-x64\publish\WpfCalculator.exe`*
-
-#### Option 2: Fully Self-Contained (Runs on any Win64 PC, ~140 MB)
-```bash
-dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true
-```
-
----
 
 ## 📜 License
 
