@@ -1,0 +1,48 @@
+## Core Build Outputs
+bin/
+obj/
+
+## Visual Studio Specific Files and Folders
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.sln.docstates
+
+## VS Code Specific Files and Folders
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+## NuGet Packages and Caches
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.assets.json
+packages/
+
+## Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## Rider/Resharper Specific Files and Folders
+.idea/
+*.sln.iml
+
+## Publish / Single-File artifacts
+publish/
+*.publish.xml
+
+## Local environment and user secrets
+*.user
+appsettings.Development.json
+secrets.json
+
+## Crash dumps and logs
+*.log
+*.dmp
