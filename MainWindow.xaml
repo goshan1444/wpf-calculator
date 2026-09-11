@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:WpfCalculator"
         mc:Ignorable="d"
         Title="Калькулятор" 
-        Height="500" 
-        Width="340"
+        Height="550" 
+        Width="380"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -16,6 +16,38 @@
         KeyDown="Window_KeyDown">
 
     <Window.Resources>
+        <!-- Dynamic Brushes defaults (Dark Theme) -->
+        <LinearGradientBrush x:Key="WindowBackground" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#EA202020" Offset="0.0"/>
+            <GradientStop Color="#EA161616" Offset="1.0"/>
+        </LinearGradientBrush>
+        
+        <LinearGradientBrush x:Key="WindowBorder" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#40FFFFFF" Offset="0"/>
+            <GradientStop Color="#12FFFFFF" Offset="1"/>
+        </LinearGradientBrush>
+
+        <SolidColorBrush x:Key="TitleBarTextBrush" Color="#99FFFFFF"/>
+        <SolidColorBrush x:Key="TitleBarTextActiveBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="DisplayTextBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="FormulaTextBrush" Color="#90FFFFFF"/>
+        <SolidColorBrush x:Key="DisplayBackgroundBrush" Color="#06FFFFFF"/>
+
+        <SolidColorBrush x:Key="DigitButtonBackground" Color="#2C2C2C"/>
+        <SolidColorBrush x:Key="DigitButtonHoverBackground" Color="#3C3C3C"/>
+        <SolidColorBrush x:Key="DigitButtonPressedBackground" Color="#1E1E1E"/>
+        <SolidColorBrush x:Key="DigitButtonTextBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="DigitButtonBorderBrush" Color="#12FFFFFF"/>
+
+        <SolidColorBrush x:Key="OperatorButtonBackground" Color="#333333"/>
+        <SolidColorBrush x:Key="OperatorButtonHoverBackground" Color="#454545"/>
+        <SolidColorBrush x:Key="OperatorButtonPressedBackground" Color="#222222"/>
+        <SolidColorBrush x:Key="OperatorButtonTextBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="OperatorButtonBorderBrush" Color="#18FFFFFF"/>
+
+        <SolidColorBrush x:Key="TabHeaderSelectedBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TabHeaderUnselectedBrush" Color="#99FFFFFF"/>
+
         <!-- Title Bar Button Style -->
         <Style x:Key="TitleBarButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -56,6 +88,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#E81123"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#F1707A"/>
@@ -68,7 +101,7 @@
 
         <!-- Base Button Style -->
         <Style x:Key="CalcButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="{DynamicResource DigitButtonTextBrush}"/>
             <Setter Property="FontFamily" Value="Segoe UI Variable, Segoe UI, Arial"/>
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="FontWeight" Value="Normal"/>
@@ -80,35 +113,19 @@
 
         <!-- Digit Button Style (with Hover/Pressed Transitions) -->
         <Style x:Key="DigitButtonStyle" TargetType="Button" BasedOn="{StaticResource CalcButtonStyle}">
+            <Setter Property="Foreground" Value="{DynamicResource DigitButtonTextBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="#2C2C2C" CornerRadius="6" BorderBrush="#12FFFFFF" BorderThickness="1">
+                        <Border x:Name="border" Background="{DynamicResource DigitButtonBackground}" CornerRadius="6" BorderBrush="{DynamicResource DigitButtonBorderBrush}" BorderThickness="1">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <!-- Smooth Hover Animations -->
-                            <EventTrigger RoutedEvent="MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="border" 
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        To="#3C3C3C" Duration="0:0:0.12"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="border" 
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        To="#2C2C2C" Duration="0:0:0.18"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource DigitButtonHoverBackground}"/>
+                            </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#1E1E1E"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#0AFFFFFF"/>
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource DigitButtonPressedBackground}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -118,34 +135,19 @@
 
         <!-- Operator Button Style -->
         <Style x:Key="OperatorButtonStyle" TargetType="Button" BasedOn="{StaticResource CalcButtonStyle}">
+            <Setter Property="Foreground" Value="{DynamicResource OperatorButtonTextBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" Background="#333333" CornerRadius="6" BorderBrush="#18FFFFFF" BorderThickness="1">
+                        <Border x:Name="border" Background="{DynamicResource OperatorButtonBackground}" CornerRadius="6" BorderBrush="{DynamicResource OperatorButtonBorderBrush}" BorderThickness="1">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <EventTrigger RoutedEvent="MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="border" 
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        To="#454545" Duration="0:0:0.12"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="border" 
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        To="#333333" Duration="0:0:0.18"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource OperatorButtonHoverBackground}"/>
+                            </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#222222"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#10FFFFFF"/>
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource OperatorButtonPressedBackground}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -155,6 +157,7 @@
 
         <!-- Equal Button Style -->
         <Style x:Key="EqualButtonStyle" TargetType="Button" BasedOn="{StaticResource CalcButtonStyle}">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -163,27 +166,67 @@
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <EventTrigger RoutedEvent="MouseEnter">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="border" 
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        To="#1875D0" Duration="0:0:0.12"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="MouseLeave">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="border" 
-                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                        To="#0067C0" Duration="0:0:0.18"/>
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1875D0"/>
+                            </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="#005A9E"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#15FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern TabControl Style -->
+        <Style x:Key="ModernTabControlStyle" TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid KeyboardNavigation.TabNavigation="Local">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <!-- Tab Headers -->
+                            <TabPanel Grid.Row="0" IsItemsHost="True" Background="Transparent" HorizontalAlignment="Center"/>
+                            <!-- Tab Content -->
+                            <Border Grid.Row="1" Background="Transparent" BorderThickness="0">
+                                <ContentPresenter ContentSource="SelectedContent"/>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern TabItem Style -->
+        <Style x:Key="ModernTabItemStyle" TargetType="TabItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{DynamicResource TabHeaderUnselectedBrush}"/>
+            <Setter Property="FontFamily" Value="Segoe UI Variable, Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Padding" Value="24,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="0,0,0,2" BorderBrush="Transparent" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter x:Name="contentPresenter" ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#0067C0"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TabHeaderSelectedBrush}"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{DynamicResource TabHeaderSelectedBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -196,21 +239,10 @@
         <!-- Root Border with CornerRadius, DropShadow, BorderBrush, Background -->
         <Border CornerRadius="12" 
                 Margin="10" 
-                ClipToBounds="False">
-            <Border.BorderBrush>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#40FFFFFF" Offset="0"/>
-                    <GradientStop Color="#12FFFFFF" Offset="1"/>
-                </LinearGradientBrush>
-            </Border.BorderBrush>
-            <Border.BorderThickness>1</Border.BorderThickness>
-            <Border.Background>
-                <!-- Fluent Acrylic Dark Theme Gradient Background -->
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#EA202020" Offset="0.0"/>
-                    <GradientStop Color="#EA161616" Offset="1.0"/>
-                </LinearGradientBrush>
-            </Border.Background>
+                ClipToBounds="False"
+                BorderThickness="1"
+                Background="{DynamicResource WindowBackground}"
+                BorderBrush="{DynamicResource WindowBorder}">
             <Border.Effect>
                 <!-- Soft Drop Shadow for Floating Acrylic Depth -->
                 <DropShadowEffect BlurRadius="12" 
@@ -226,7 +258,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/> <!-- Row 0: Title Bar -->
                         <RowDefinition Height="120"/>  <!-- Row 1: Display -->
-                        <RowDefinition Height="*"/>    <!-- Row 2: Grid of Buttons -->
+                        <RowDefinition Height="*"/>    <!-- Row 2: Tabs with Grids of Buttons -->
                     </Grid.RowDefinitions>
 
                     <!-- Custom Windows 11 Title Bar -->
@@ -238,23 +270,26 @@
 
                         <!-- Title & Icon -->
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
-                            <TextBlock Text="🖩" Foreground="#99FFFFFF" FontSize="13" VerticalAlignment="Center" Margin="0,0,8,0"/>
-                            <TextBlock Text="Calculator" Foreground="#99FFFFFF" FontSize="12" FontFamily="Segoe UI Variable, Segoe UI" FontWeight="Normal" VerticalAlignment="Center"/>
+                            <TextBlock Text="🖩" Foreground="{DynamicResource TitleBarTextBrush}" FontSize="13" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                            <TextBlock Text="Calculator" Foreground="{DynamicResource TitleBarTextBrush}" FontSize="12" FontFamily="Segoe UI Variable, Segoe UI" FontWeight="Normal" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <!-- Control Buttons -->
+                        <!-- Control Buttons (with Theme Toggle) -->
                         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="ThemeToggleButton" Width="46" Height="32" Click="OnThemeToggleClick" Style="{StaticResource TitleBarButtonStyle}">
+                                <TextBlock x:Name="ThemeToggleIcon" Text="☀️" Foreground="{DynamicResource TitleBarTextActiveBrush}" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Button>
                             <Button Width="46" Height="32" Click="OnMinimizeClick" Style="{StaticResource TitleBarButtonStyle}">
-                                <TextBlock Text="—" Foreground="#FFFFFF" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Text="—" Foreground="{DynamicResource TitleBarTextActiveBrush}" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Button>
                             <Button Width="46" Height="32" Click="OnCloseClick" Style="{StaticResource TitleBarCloseButtonStyle}">
-                                <TextBlock Text="✕" Foreground="#FFFFFF" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBlock Text="✕" Foreground="{DynamicResource TitleBarTextActiveBrush}" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Button>
                         </StackPanel>
                     </Grid>
 
                     <!-- Display Area -->
-                    <Grid Grid.Row="1" Background="#06FFFFFF">
+                    <Grid Grid.Row="1" Background="{DynamicResource DisplayBackgroundBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
@@ -264,7 +299,7 @@
                         <TextBlock x:Name="FormulaText" 
                                    Grid.Row="0"
                                    Text="" 
-                                   Foreground="#90FFFFFF" 
+                                   Foreground="{DynamicResource FormulaTextBrush}" 
                                    FontSize="13" 
                                    TextAlignment="Right" 
                                    Margin="20,10,20,4" 
@@ -280,57 +315,125 @@
                                  Stretch="Uniform">
                             <TextBlock x:Name="DisplayText" 
                                        Text="0" 
-                                       Foreground="#FFFFFF" 
+                                       Foreground="{DynamicResource DisplayTextBrush}" 
                                        FontSize="44" 
                                        FontWeight="SemiBold" 
                                        FontFamily="Segoe UI Variable, Segoe UI"/>
                         </Viewbox>
                     </Grid>
 
-                    <!-- Buttons Grid -->
-                    <Grid Grid.Row="2" Margin="12,8,12,12">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                    <!-- Modern TabControl -->
+                    <TabControl Grid.Row="2" Style="{StaticResource ModernTabControlStyle}" Margin="12,4,12,12">
+                        <!-- Tab 1: Standard Calculator -->
+                        <TabItem Header="Обычный" Style="{StaticResource ModernTabItemStyle}">
+                            <Grid Margin="0,8,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                        <!-- Row 0: C, Backspace, /, * -->
-                        <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="C" Style="{StaticResource OperatorButtonStyle}" Click="OnClearClick"/>
-                        <Button Grid.Row="0" Grid.Column="2" Content="⌫" Style="{StaticResource OperatorButtonStyle}" Click="OnBackspaceClick"/>
-                        <Button Grid.Row="0" Grid.Column="3" Content="∕" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+                                <!-- Row 0: C, Backspace, /, * -->
+                                <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="C" Style="{StaticResource OperatorButtonStyle}" Click="OnClearClick"/>
+                                <Button Grid.Row="0" Grid.Column="2" Content="⌫" Style="{StaticResource OperatorButtonStyle}" Click="OnBackspaceClick"/>
+                                <Button Grid.Row="0" Grid.Column="3" Content="∕" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
 
-                        <!-- Row 1: 7, 8, 9, * -->
-                        <Button Grid.Row="1" Grid.Column="0" Content="7" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="1" Grid.Column="1" Content="8" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="1" Grid.Column="2" Content="9" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="1" Grid.Column="3" Content="×" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+                                <!-- Row 1: 7, 8, 9, * -->
+                                <Button Grid.Row="1" Grid.Column="0" Content="7" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="1" Grid.Column="1" Content="8" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="1" Grid.Column="2" Content="9" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="1" Grid.Column="3" Content="×" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
 
-                        <!-- Row 2: 4, 5, 6, - -->
-                        <Button Grid.Row="2" Grid.Column="0" Content="4" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="2" Grid.Column="1" Content="5" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="2" Grid.Column="2" Content="6" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="2" Grid.Column="3" Content="−" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+                                <!-- Row 2: 4, 5, 6, - -->
+                                <Button Grid.Row="2" Grid.Column="0" Content="4" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="2" Grid.Column="1" Content="5" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="2" Grid.Column="2" Content="6" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="2" Grid.Column="3" Content="−" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
 
-                        <!-- Row 3: 1, 2, 3, + -->
-                        <Button Grid.Row="3" Grid.Column="0" Content="1" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="3" Grid.Column="1" Content="2" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="3" Grid.Column="2" Content="3" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="3" Grid.Column="3" Content="+" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+                                <!-- Row 3: 1, 2, 3, + -->
+                                <Button Grid.Row="3" Grid.Column="0" Content="1" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="3" Grid.Column="1" Content="2" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="3" Grid.Column="2" Content="3" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="3" Grid.Column="3" Content="+" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
 
-                        <!-- Row 4: 0, , , = -->
-                        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="0" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
-                        <Button Grid.Row="4" Grid.Column="2" Content="," Style="{StaticResource DigitButtonStyle}" Click="OnDecimalClick"/>
-                        <Button Grid.Row="4" Grid.Column="3" Content="=" Style="{StaticResource EqualButtonStyle}" Click="OnEqualClick"/>
-                    </Grid>
+                                <!-- Row 4: 0, , , = -->
+                                <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Content="0" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="4" Grid.Column="2" Content="," Style="{StaticResource DigitButtonStyle}" Click="OnDecimalClick"/>
+                                <Button Grid.Row="4" Grid.Column="3" Content="=" Style="{StaticResource EqualButtonStyle}" Click="OnEqualClick"/>
+                            </Grid>
+                        </TabItem>
+
+                        <!-- Tab 2: Scientific/Extended Calculator -->
+                        <TabItem Header="Расширенный" Style="{StaticResource ModernTabItemStyle}">
+                            <Grid Margin="0,8,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Row 0: C, Backspace, ^, π, e -->
+                                <Button Grid.Row="0" Grid.Column="0" Content="C" Style="{StaticResource OperatorButtonStyle}" Click="OnClearClick"/>
+                                <Button Grid.Row="0" Grid.Column="1" Content="⌫" Style="{StaticResource OperatorButtonStyle}" Click="OnBackspaceClick"/>
+                                <Button Grid.Row="0" Grid.Column="2" Content="^" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+                                <Button Grid.Row="0" Grid.Column="3" Content="π" Style="{StaticResource OperatorButtonStyle}" Click="OnConstantClick"/>
+                                <Button Grid.Row="0" Grid.Column="4" Content="e" Style="{StaticResource OperatorButtonStyle}" Click="OnConstantClick"/>
+
+                                <!-- Row 1: sin, 7, 8, 9, / -->
+                                <Button Grid.Row="1" Grid.Column="0" Content="sin" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="1" Grid.Column="1" Content="7" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="1" Grid.Column="2" Content="8" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="1" Grid.Column="3" Content="9" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="1" Grid.Column="4" Content="∕" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+
+                                <!-- Row 2: cos, 4, 5, 6, * -->
+                                <Button Grid.Row="2" Grid.Column="0" Content="cos" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="2" Grid.Column="1" Content="4" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="2" Grid.Column="2" Content="5" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="2" Grid.Column="3" Content="6" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="2" Grid.Column="4" Content="×" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+
+                                <!-- Row 3: tan, 1, 2, 3, - -->
+                                <Button Grid.Row="3" Grid.Column="0" Content="tan" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="3" Grid.Column="1" Content="1" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="3" Grid.Column="2" Content="2" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="3" Grid.Column="3" Content="3" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="3" Grid.Column="4" Content="−" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+
+                                <!-- Row 4: ln, log, 0, , + -->
+                                <Button Grid.Row="4" Grid.Column="0" Content="ln" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="4" Grid.Column="1" Content="log" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="4" Grid.Column="2" Content="0" Style="{StaticResource DigitButtonStyle}" Click="OnDigitClick"/>
+                                <Button Grid.Row="4" Grid.Column="3" Content="," Style="{StaticResource DigitButtonStyle}" Click="OnDecimalClick"/>
+                                <Button Grid.Row="4" Grid.Column="4" Content="+" Style="{StaticResource OperatorButtonStyle}" Click="OnOperatorClick"/>
+
+                                <!-- Row 5: √, x², 1/x, ±, = -->
+                                <Button Grid.Row="5" Grid.Column="0" Content="√" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="5" Grid.Column="1" Content="x²" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="5" Grid.Column="2" Content="1/x" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="5" Grid.Column="3" Content="±" Style="{StaticResource OperatorButtonStyle}" FontSize="14" Click="OnUnaryOperatorClick"/>
+                                <Button Grid.Row="5" Grid.Column="4" Content="=" Style="{StaticResource EqualButtonStyle}" Click="OnEqualClick"/>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
                 </Grid>
             </Border>
         </Border>

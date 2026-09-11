@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace WpfCalculator;
 
@@ -14,6 +15,7 @@ public partial class MainWindow : Window
     private double? operand1 = null;
     private string? pendingOperator = null;
     private bool isNewInput = false;
+    private bool isDarkTheme = true;
 
     public MainWindow()
     {
@@ -36,6 +38,92 @@ public partial class MainWindow : Window
     private void OnCloseClick(object sender, RoutedEventArgs e)
     {
         Close();
+    }
+
+    private void OnThemeToggleClick(object sender, RoutedEventArgs e)
+    {
+        ApplyTheme(!isDarkTheme);
+    }
+
+    private void ApplyTheme(bool isDark)
+    {
+        isDarkTheme = isDark;
+
+        var themeToggleIcon = this.FindName("ThemeToggleIcon") as TextBlock;
+        if (themeToggleIcon != null)
+        {
+            themeToggleIcon.Text = isDark ? "☀️" : "🌙";
+        }
+
+        if (isDark)
+        {
+            this.Resources["WindowBackground"] = CreateLinearGradient(ColorFromString("#EA202020"), ColorFromString("#EA161616"));
+            this.Resources["WindowBorder"] = CreateLinearGradient(ColorFromString("#40FFFFFF"), ColorFromString("#12FFFFFF"));
+            this.Resources["TitleBarTextBrush"] = CreateSolidBrush("#99FFFFFF");
+            this.Resources["TitleBarTextActiveBrush"] = CreateSolidBrush("#FFFFFF");
+            this.Resources["DisplayTextBrush"] = CreateSolidBrush("#FFFFFF");
+            this.Resources["FormulaTextBrush"] = CreateSolidBrush("#90FFFFFF");
+            this.Resources["DisplayBackgroundBrush"] = CreateSolidBrush("#06FFFFFF");
+
+            this.Resources["DigitButtonBackground"] = CreateSolidBrush("#2C2C2C");
+            this.Resources["DigitButtonHoverBackground"] = CreateSolidBrush("#3C3C3C");
+            this.Resources["DigitButtonPressedBackground"] = CreateSolidBrush("#1E1E1E");
+            this.Resources["DigitButtonTextBrush"] = CreateSolidBrush("#FFFFFF");
+            this.Resources["DigitButtonBorderBrush"] = CreateSolidBrush("#12FFFFFF");
+
+            this.Resources["OperatorButtonBackground"] = CreateSolidBrush("#333333");
+            this.Resources["OperatorButtonHoverBackground"] = CreateSolidBrush("#454545");
+            this.Resources["OperatorButtonPressedBackground"] = CreateSolidBrush("#222222");
+            this.Resources["OperatorButtonTextBrush"] = CreateSolidBrush("#FFFFFF");
+            this.Resources["OperatorButtonBorderBrush"] = CreateSolidBrush("#18FFFFFF");
+
+            this.Resources["TabHeaderSelectedBrush"] = CreateSolidBrush("#FFFFFF");
+            this.Resources["TabHeaderUnselectedBrush"] = CreateSolidBrush("#99FFFFFF");
+        }
+        else
+        {
+            this.Resources["WindowBackground"] = CreateLinearGradient(ColorFromString("#EAF2F2F2"), ColorFromString("#EAE6E6E6"));
+            this.Resources["WindowBorder"] = CreateLinearGradient(ColorFromString("#40000000"), ColorFromString("#12000000"));
+            this.Resources["TitleBarTextBrush"] = CreateSolidBrush("#99000000");
+            this.Resources["TitleBarTextActiveBrush"] = CreateSolidBrush("#000000");
+            this.Resources["DisplayTextBrush"] = CreateSolidBrush("#000000");
+            this.Resources["FormulaTextBrush"] = CreateSolidBrush("#90000000");
+            this.Resources["DisplayBackgroundBrush"] = CreateSolidBrush("#06000000");
+
+            this.Resources["DigitButtonBackground"] = CreateSolidBrush("#FFFFFF");
+            this.Resources["DigitButtonHoverBackground"] = CreateSolidBrush("#F5F5F5");
+            this.Resources["DigitButtonPressedBackground"] = CreateSolidBrush("#E5E5E5");
+            this.Resources["DigitButtonTextBrush"] = CreateSolidBrush("#000000");
+            this.Resources["DigitButtonBorderBrush"] = CreateSolidBrush("#12000000");
+
+            this.Resources["OperatorButtonBackground"] = CreateSolidBrush("#F9F9F9");
+            this.Resources["OperatorButtonHoverBackground"] = CreateSolidBrush("#F2F2F2");
+            this.Resources["OperatorButtonPressedBackground"] = CreateSolidBrush("#E2E2E2");
+            this.Resources["OperatorButtonTextBrush"] = CreateSolidBrush("#000000");
+            this.Resources["OperatorButtonBorderBrush"] = CreateSolidBrush("#18000000");
+
+            this.Resources["TabHeaderSelectedBrush"] = CreateSolidBrush("#000000");
+            this.Resources["TabHeaderUnselectedBrush"] = CreateSolidBrush("#99000000");
+        }
+    }
+
+    private Color ColorFromString(string hex)
+    {
+        return (Color)ColorConverter.ConvertFromString(hex);
+    }
+
+    private SolidColorBrush CreateSolidBrush(string hex)
+    {
+        var brush = new SolidColorBrush(ColorFromString(hex));
+        brush.Freeze();
+        return brush;
+    }
+
+    private LinearGradientBrush CreateLinearGradient(Color startColor, Color endColor)
+    {
+        var brush = new LinearGradientBrush(startColor, endColor, new Point(0, 0), new Point(0, 1));
+        brush.Freeze();
+        return brush;
     }
 
     private void OnDigitClick(object sender, RoutedEventArgs e)
@@ -163,6 +251,103 @@ public partial class MainWindow : Window
         }
     }
 
+    private void OnConstantClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button)
+        {
+            string constant = button.Content?.ToString() ?? "";
+            double val = constant == "π" ? Math.PI : Math.E;
+            DisplayText.Text = FormatResult(val);
+            isNewInput = true;
+        }
+    }
+
+    private void OnUnaryOperatorClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button)
+        {
+            string op = button.Content?.ToString() ?? "";
+            ApplyUnaryOperator(op);
+        }
+    }
+
+    private void ApplyUnaryOperator(string op)
+    {
+        if (DisplayText.Text == "Ошибка") return;
+
+        double val = ParseNumber(DisplayText.Text);
+        double result = 0;
+        string formula = "";
+
+        switch (op)
+        {
+            case "sin":
+                result = Math.Sin(val * Math.PI / 180.0);
+                formula = $"sin({FormatResult(val)})";
+                break;
+            case "cos":
+                result = Math.Cos(val * Math.PI / 180.0);
+                formula = $"cos({FormatResult(val)})";
+                break;
+            case "tan":
+                result = Math.Tan(val * Math.PI / 180.0);
+                formula = $"tan({FormatResult(val)})";
+                break;
+            case "ln":
+                if (val <= 0)
+                {
+                    DisplayText.Text = "Ошибка";
+                    isNewInput = true;
+                    return;
+                }
+                result = Math.Log(val);
+                formula = $"ln({FormatResult(val)})";
+                break;
+            case "log":
+                if (val <= 0)
+                {
+                    DisplayText.Text = "Ошибка";
+                    isNewInput = true;
+                    return;
+                }
+                result = Math.Log10(val);
+                formula = $"log({FormatResult(val)})";
+                break;
+            case "√":
+                if (val < 0)
+                {
+                    DisplayText.Text = "Ошибка";
+                    isNewInput = true;
+                    return;
+                }
+                result = Math.Sqrt(val);
+                formula = $"√({FormatResult(val)})";
+                break;
+            case "x²":
+                result = Math.Pow(val, 2);
+                formula = $"sqr({FormatResult(val)})";
+                break;
+            case "1/x":
+                if (val == 0)
+                {
+                    DisplayText.Text = "Ошибка";
+                    isNewInput = true;
+                    return;
+                }
+                result = 1.0 / val;
+                formula = $"1/({FormatResult(val)})";
+                break;
+            case "±":
+                result = -val;
+                DisplayText.Text = FormatResult(result);
+                return;
+        }
+
+        DisplayText.Text = FormatResult(result);
+        FormulaText.Text = formula;
+        isNewInput = true;
+    }
+
     private void Calculate()
     {
         if (string.IsNullOrEmpty(pendingOperator) || operand1 == null) return;
@@ -197,6 +382,9 @@ public partial class MainWindow : Window
                     return;
                 }
                 result = firstOperand / secondOperand;
+                break;
+            case "^":
+                result = Math.Pow(firstOperand, secondOperand);
                 break;
         }
 
@@ -270,6 +458,12 @@ public partial class MainWindow : Window
                 e.Handled = true;
                 break;
             case Key.D6:
+                if (isShift)
+                    ApplyOperator("^"); // Shift + 6
+                else
+                    AppendDigit("6");
+                e.Handled = true;
+                break;
             case Key.NumPad6:
                 AppendDigit("6");
                 e.Handled = true;

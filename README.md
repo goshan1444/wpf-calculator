@@ -1,6 +1,6 @@
 # 🖩 Fluent WPF Calculator
 
-A sleek, modern, and high-performance dark-themed desktop calculator built with **WPF** and **.NET 10** (C# 14). Designed with inspiration from Windows 11 Fluent Design, Acrylic surfaces, and smooth transitions.
+A sleek, modern, and high-performance desktop calculator built with **WPF** and **.NET 10** (C# 14). Designed with inspiration from Windows 11 Fluent Design, Acrylic surfaces, smooth transitions, and a customizable theme.
 
 ---
 
@@ -9,7 +9,7 @@ A sleek, modern, and high-performance dark-themed desktop calculator built with 
 *(Add your screenshots here to showcase the beautiful UI!)*
 
 <p align="center">
-  <img src="https://via.placeholder.com/320x480.png?text=Fluent+WPF+Calculator+Placeholder" alt="Fluent WPF Calculator UI" width="320"/>
+  <img src="https://via.placeholder.com/380x550.png?text=Fluent+WPF+Calculator+Placeholder" alt="Fluent WPF Calculator UI" width="380"/>
 </p>
 
 ---
@@ -17,24 +17,34 @@ A sleek, modern, and high-performance dark-themed desktop calculator built with 
 ## ✨ Features
 
 - **Windows 11 Fluent & Acrylic Style**:
-  - Semi-transparent dark linear gradient background mimicking Acrylic materials.
+  - Semi-transparent linear gradient background mimicking Acrylic materials.
   - Thin, elegant high-contrast gradient borders reflecting light at the top of the window.
   - Soft drop shadow effect for organic floating window depth.
   - 12px rounded window and button corners matching Windows 11 design guidelines.
+- **Theme Selection (Light & Dark)**:
+  - Supports switching between **Dark Theme** (default) and **Light Theme** with a single click.
+  - Theme toggle button (`☀️`/`🌙`) is integrated directly into the custom title bar.
+  - Fully dynamic resources update all buttons, colors, gradients, display, and outline colors instantly.
+- **Two Calculator Modes (Tabs)**:
+  - **Обычный (Standard)**: Quick, clean tab for everyday operations (`+`, `-`, `*`, `/`).
+  - **Расширенный (Scientific/Extended)**: Advanced tab containing extra buttons:
+    - **Constants**: Pi (`π`), Euler's number (`e`).
+    - **Binary Operators**: Power (`^`).
+    - **Unary Scientific Functions**: Sine (`sin`), Cosine (`cos`), Tangent (`tan`), Natural Log (`ln`), Common Log (`log`), Square Root (`√`), Square (`x²`), Reciprocal (`1/x`), and Sign Toggle (`±`).
 - **Handcrafted Window Controls**:
   - Full support for standard window dragging by grabbing the customized title bar.
   - Minimalistic, modern Minimize and Close buttons.
   - Close button lights up red on hover, mirroring native OS behavior.
-- **High-Fidelity Animations**:
-  - Storyboard-powered smooth color transitions (`MouseEnter`/`MouseLeave`) for all buttons.
+- **High-Fidelity Animations & Triggers**:
+  - Property trigger-powered smooth transitions (`MouseEnter`/`MouseLeave`) for all buttons.
   - Immediate responsive tactile feedback on pressed states.
 - **Robust Math Logic**:
-  - Supports arithmetic operations: addition (`+`), subtraction (`-`), multiplication (`*`), and division (`/`).
   - Seamless support for floating-point calculations with cross-culture decimal separator parsing (handles both Russian `,` and Western `.` seamlessly depending on user's OS locale).
-  - Safe division-by-zero handler (displays `"Ошибка"` instead of crashing the process).
+  - Safe division-by-zero, negative root, and non-positive log input handlers (displays `"Ошибка"` instead of crashing the process).
   - Auto-scaling display: Uses `Viewbox` to dynamically scale font size down when typing long digits, avoiding layout overflow or truncation.
 - **Advanced Desktop Input Support**:
   - Full keyboard control mapping including standard digits, numeric pad (NumPad), operators, Enter (`=`), Backspace (`⌫`), and Escape (`C`).
+  - Keyboard shortcut `Shift + 6` mapped to exponentiation (`^`).
   - **Focus Immunity**: All buttons are non-focusable, preventing mouse clicks from stealing focus. This allows the user to click with the mouse and type with the keyboard in any sequence without losing active window focus!
 
 ---
