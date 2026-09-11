@@ -28,7 +28,7 @@ A sleek, modern, and high-performance desktop calculator built with **WPF** and 
 - **Two Calculator Modes (Tabs)**:
   - **Обычный (Standard)**: Quick, clean tab for everyday operations (`+`, `-`, `*`, `/`).
   - **Расширенный (Scientific/Extended)**: Advanced tab containing extra buttons:
-    - **Constants**: Pi (`π`), Euler's number (`e`).
+    - **Constants**: Pi (`π`), Euler\'s number (`e`).
     - **Binary Operators**: Power (`^`).
     - **Unary Scientific Functions**: Sine (`sin`), Cosine (`cos`), Tangent (`tan`), Natural Log (`ln`), Common Log (`log`), Square Root (`√`), Square (`x²`), Reciprocal (`1/x`), and Sign Toggle (`±`).
 - **Handcrafted Window Controls**:
@@ -39,7 +39,7 @@ A sleek, modern, and high-performance desktop calculator built with **WPF** and 
   - Property trigger-powered smooth transitions (`MouseEnter`/`MouseLeave`) for all buttons.
   - Immediate responsive tactile feedback on pressed states.
 - **Robust Math Logic**:
-  - Seamless support for floating-point calculations with cross-culture decimal separator parsing (handles both Russian `,` and Western `.` seamlessly depending on user's OS locale).
+  - Seamless support for floating-point calculations with cross-culture decimal separator parsing (handles both Russian `,` and Western `.` seamlessly depending on user\'s OS locale).
   - Safe division-by-zero, negative root, and non-positive log input handlers (displays `"Ошибка"` instead of crashing the process).
   - Auto-scaling display: Uses `Viewbox` to dynamically scale font size down when typing long digits, avoiding layout overflow or truncation.
 - **Advanced Desktop Input Support**:
@@ -76,7 +76,7 @@ dotnet run
 WPF and .NET 10 allow publishing the entire application as a single standalone executable.
 
 #### Option 1: Framework-Dependent Standalone (Extremely Compact, ~180 KB)
-This option creates a single `.exe` file that uses the .NET 10 runtime already installed on the user's machine.
+This option creates a single `.exe` file that uses the .NET 10 runtime already installed on the user\'s machine.
 ```bash
 dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --self-contained false
 ```
