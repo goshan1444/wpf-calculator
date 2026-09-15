@@ -6,10 +6,10 @@ A sleek, modern, and high-performance desktop calculator built with **WPF** and 
 
 ## 📸 Screenshots
 
-*(Add your screenshots here to showcase the beautiful UI!)*
+
 
 <p align="center">
-  <img src="https://via.placeholder.com/380x550.png?text=Fluent+WPF+Calculator+Placeholder" alt="Fluent WPF Calculator UI" width="380"/>
+  <img src="https://ibb.co/BHQv9GT6" alt="Fluent WPF Calculator UI" width="380"/>
 </p>
 
 ---
