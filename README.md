@@ -91,6 +91,4 @@ dotnet publish -c Release -r win-x64 -p:PublishSingleFile=true --self-contained 
 
 ---
 
-## 📜 License
 
-This project is open-source and available under the [MIT License](LICENSE). Feel free to customize and expand it!
